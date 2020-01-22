@@ -2,6 +2,8 @@
 // =============================================================
 var express = require("express");
 var path = require("path");
+var fs = require("fs");
+
 
 // Sets up the Express App
 // =============================================================
@@ -33,6 +35,43 @@ var reservations = [
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname,"public/index.html"));
 });
+
+
+
+// // Create New Characters - takes in JSON input
+// app.post("/api/reservations", function (req, res) {
+//     // req.body hosts is equal to the JSON post sent from the user
+//     // This works because of our body parsing middleware
+//     var newCharacter = req.body;
+  
+//     // Using a RegEx Pattern to remove spaces from newCharacter
+//     // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
+//     newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
+  
+//     console.log(newCharacter);
+  
+//     characters.push(newCharacter);
+  
+//     res.json(newCharacter);
+//   });
+
+// //   * POST `/api/notes` - Should recieve a new note to save on the request body, 
+// //   add it to the `db.json` file, and then return the new note to the client.
+
+app.post(`/api/notes`, (req, res) => {
+    const notetoAdd = req.body;
+    dbJSON = JSON.parse(fs.readFileSync('db/db.json', 'utf8'));
+    console.log(dbJSON)
+    dbJSON.push(notetoAdd);
+    fs.writeFileSync('db/db.json', JSON.stringify(dbJSON,null,2,"utf-8"))
+    
+    res.json(notetoAdd);
+  });
+
+
+app.get(`/api/notes`, (req, res) => {
+    res.sendFile(path.join(__dirname,"db/db.json"));
+  });
 
 app.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname,"public/notes.html"));
@@ -68,22 +107,7 @@ app.get("/api/reservations/:reservation", function (req, res) {
   return res.json(false);
 });
 
-// Create New Characters - takes in JSON input
-app.post("/api/reservations", function (req, res) {
-  // req.body hosts is equal to the JSON post sent from the user
-  // This works because of our body parsing middleware
-  var newCharacter = req.body;
 
-  // Using a RegEx Pattern to remove spaces from newCharacter
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
-
-  console.log(newCharacter);
-
-  characters.push(newCharacter);
-
-  res.json(newCharacter);
-});
 
 // Starts the server to begin listening
 // =============================================================
