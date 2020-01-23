@@ -16,55 +16,14 @@ app.use(express.static('public/'))
 app.use(express.json());
 
 
-// Star Wars Characters (DATA)
-// =============================================================
-var reservations = [
-  {
-    routeName: "garrettkrage",
-    name: "garrett krage",
-    phoneNumber: "7193404935",
-    email: 'garrett.krage@yahoo.com',
-    uniqueID: 'hungry man'
-  },
-];
-
-// Routes
-// =============================================================
-
-// Basic route that sends the user first to the AJAX Page
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname,"public/index.html"));
 });
 
-
-
-// // Create New Characters - takes in JSON input
-// app.post("/api/reservations", function (req, res) {
-//     // req.body hosts is equal to the JSON post sent from the user
-//     // This works because of our body parsing middleware
-//     var newCharacter = req.body;
-  
-//     // Using a RegEx Pattern to remove spaces from newCharacter
-//     // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-//     newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
-  
-//     console.log(newCharacter);
-  
-//     characters.push(newCharacter);
-  
-//     res.json(newCharacter);
-//   });
-
-// //   * POST `/api/notes` - Should recieve a new note to save on the request body, 
-// //   add it to the `db.json` file, and then return the new note to the client.
-
-
-// * DELETE `/api/notes/:id` - Should recieve a query paramter containing the id of a note to delete. This means you
-// 'll need to find a way to give each note a unique `id` when it's saved. In order to delete a note, 
-// you'll need to read all notes from the 
-// `db.json` file, remove the note with the given `id` property, and then rewrite the notes to the `db.json` file.
+//deletes notes from db
 app.delete("/api/notes/:id", (req,res)=>{
-    id = req.params.reservations;
+    id = req.params.id;
+    console.log(id)
     dbJSON = JSON.parse(fs.readFileSync('db/db.json', 'utf8'));
     auxElement = dbJSON[id];
     dbJSON.splice(id,1);
@@ -72,14 +31,14 @@ app.delete("/api/notes/:id", (req,res)=>{
     res.json(auxElement);
 })
 
-
+// adds a note to the database true
 app.post(`/api/notes`, (req, res) => {
     const notetoAdd = req.body;
     dbJSON = JSON.parse(fs.readFileSync('db/db.json', 'utf8'));
     console.log(dbJSON)
     dbJSON.push(notetoAdd);
     fs.writeFileSync('db/db.json', JSON.stringify(dbJSON,null,2,"utf-8"))
-    res.json(notetoAdd);
+    res.json(dbJSON);
   });
 
 
