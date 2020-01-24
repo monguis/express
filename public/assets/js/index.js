@@ -6,8 +6,7 @@ var $noteList = $(".list-container .list-group");
 
 // activeNote is used to keep track of the note in the textarea
 var activeNote = {};
-console.log("connecter");
-// A function for getting all notes from the db
+// A function for getting all notes from the db true
 var getNotes = function() {
   return $.ajax({
     url: "/api/notes",
@@ -15,7 +14,7 @@ var getNotes = function() {
   });
 };
 
-// A function for saving a note to the db
+// A function for saving a note to the db true
 var saveNote = function(note) {
   return $.ajax({
     url: "/api/notes",
@@ -24,15 +23,16 @@ var saveNote = function(note) {
   });
 };
 
-// A function for deleting a note from the db
+// A function for deleting a note from the db true
 var deleteNote = function(id) {
+  console.log("api/notes/" + id)
   return $.ajax({
     url: "api/notes/" + id,
     method: "DELETE"
   });
 };
 
-// If there is an activeNote, display it, otherwise render empty inputs
+// If there is an activeNote, display it, otherwise render empty inputs false
 var renderActiveNote = function() {
   $saveNoteBtn.hide();
 
@@ -56,7 +56,7 @@ var handleNoteSave = function() {
     text: $noteText.val()
   };
 
-  saveNote(newNote).then(function(data) {
+  saveNote(newNote).then(function() {
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -66,16 +66,18 @@ var handleNoteSave = function() {
 var handleNoteDelete = function(event) {
   // prevents the click listener for the list from being called when the button inside of it is clicked
   event.stopPropagation();
-
+  console.log("below stop prop"+this);
+  console.log(this);
   var note = $(this)
     .parent(".list-group-item")
     .data();
-
+    console.log(note.id)
   if (activeNote.id === note.id) {
     activeNote = {};
   }
 
   deleteNote(note.id).then(function() {
+    console.log("funciones rotas")/////////////////////////////////////////
     getAndRenderNotes();
     renderActiveNote();
   });
